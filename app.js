@@ -10,8 +10,8 @@ function fullEntries(){return entries.filter(e=>e.full).sort((a,b)=>a.odo-b.odo)
 function mileageFor(e){const fs=fullEntries();const i=fs.findIndex(x=>x.id===e.id);if(i<1)return null;const prev=fs[i-1];const dist=e.odo-prev.odo;return dist>0&&e.litres>0?dist/e.litres:null}
 function distFor(e){const fs=fullEntries();const i=fs.findIndex(x=>x.id===e.id);return i<1?null:e.odo-fs[i-1].odo}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-$('date').value=new Date().toLocaleDateString('en-CA');
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));if(b.dataset.tab==='insights')drawChart()}));
+$('date').value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+document.querySelectorAll('.bottom-nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.bottom-nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));if(b.dataset.tab==='insights')drawChart()}));
 $('fuelForm').addEventListener('submit',e=>{
  e.preventDefault();
  const date=$('date').value, odo=Number($('odo').value), litres=Number($('litres').value), price=Number($('price').value), full=$('fullTank').checked, note=$('note').value.trim();
@@ -19,7 +19,7 @@ $('fuelForm').addEventListener('submit',e=>{
  const latest=entries.reduce((m,x)=>Math.max(m,x.odo),-Infinity);
  if(odo<=latest){toast(`Odometer must be higher than the latest saved reading (${nfmt(latest)} km).`);return}
  entries.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),date,odo,litres,price,full,note,createdAt:Date.now()});
- persist();$('odo').value='';$('litres').value='';$('note').value='';$('date').value=new Date().toLocaleDateString('en-CA');toast('Fuel record saved on this device.');
+ persist();$('odo').value='';$('litres').value='';$('note').value='';$('date').value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);toast('Fuel record saved on this device.');
 });
 function render(){
  const fs=fullEntries(), last=fs[fs.length-1], m=last?mileageFor(last):null;

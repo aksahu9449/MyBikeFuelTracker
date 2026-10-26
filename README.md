@@ -26,3 +26,6 @@ An installable, offline-first Progressive Web App (PWA). No Android Studio or Pl
 - Mileage calculation uses the litres added at each full refill and the distance since the previous full refill. For accurate full-to-full mileage, fill to the same level and record top-ups consistently.
 - Records are saved in the browser on that device. Export JSON before clearing browser data or switching phones.
 - Service worker/offline caching requires HTTPS or localhost. Opening `index.html` directly as a file won't enable PWA installation or offline caching.
+
+## UI update
+This version uses a mobile-first layout with a fixed bottom icon navigation for Add fuel, History, Mileage, and Backup. Replace the files in your existing GitHub Pages repository and reload the site. The service worker cache version has been bumped to refresh the UI.

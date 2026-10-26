@@ -9,35 +9,74 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>My Bike Fuel Tracker</title>
 <style>
-:root{--green:#087f5b;--dark:#073b2e;--ink:#172720;--muted:#6a7b73;--bg:#f3f7f4;--line:#dce7e0;--white:#fff;--red:#b42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink)}
-header{background:linear-gradient(135deg,var(--dark),#0a7052);color:white;padding:22px 18px 26px;border-radius:0 0 24px 24px}
-header .eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:800;opacity:.78}h1{font-size:25px;line-height:1.15;margin:8px 0}header p{margin:0;color:#d3e8dc;font-size:13px}
-main{max-width:760px;margin:auto;padding:0 14px 35px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-14px}
-.card{background:white;border:1px solid #e8eee9;border-radius:16px;padding:14px;box-shadow:0 4px 16px #153d2810}
-.stat .k{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--muted)}.stat .v{font-size:23px;font-weight:800;color:var(--green);margin:5px 0}.stat .s{font-size:11px;color:var(--muted)}
-nav{display:flex;gap:8px;overflow:auto;padding:18px 0 12px}nav button{border:1px solid var(--line);background:#fff;color:var(--muted);padding:10px 14px;border-radius:999px;font-weight:700;white-space:nowrap}nav button.active{background:var(--dark);color:white;border-color:var(--dark)}
-h2{font-size:18px;margin:8px 0 12px}.panel{display:none}.panel.active{display:block}.field{margin:10px 0}.field label{display:block;font-size:12px;font-weight:700;color:#52655b;margin-bottom:5px}
-input,select,textarea{width:100%;font:inherit;font-size:15px;border:1px solid #d4e0d8;background:white;border-radius:10px;padding:12px;color:var(--ink);outline-color:var(--green)}
-.checkrow{display:flex;gap:10px;align-items:center;padding:8px 0;font-size:14px}.checkrow input{width:20px;height:20px;accent-color:var(--green)}
-button.primary{background:var(--green);color:white;border:0;border-radius:11px;padding:13px 16px;font-weight:800;width:100%;font-size:15px;margin-top:8px}
-button.secondary{background:white;color:var(--green);border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-weight:750}
-button.danger{background:white;color:var(--red);border:1px solid #f0d0ce;border-radius:9px;padding:7px 10px;font-weight:700}
-.hint{font-size:12px;color:var(--muted);line-height:1.5}.record{margin:10px 0}.recordtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.record strong{font-size:15px}.pill{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;padding:4px 7px;background:#e1f4e9;color:#087f5b}.meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.7}.record-actions{display:flex;justify-content:flex-end;margin-top:8px}.empty{text-align:center;color:var(--muted);padding:24px 8px}.chartwrap{height:210px;width:100%;margin:10px 0}.chartwrap canvas{width:100%;height:100%}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172720;color:white;padding:12px 16px;border-radius:12px;box-shadow:0 6px 20px #0002;display:none;max-width:90%;z-index:10}
-@media(min-width:600px){header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}.stats{grid-template-columns:repeat(3,1fr)}main{padding-left:20px;padding-right:20px}}
+:root{--green:#0b8f67;--green2:#087451;--dark:#073b2e;--ink:#142820;--muted:#718178;--bg:#f3f7f4;--line:#e2ebe5;--white:#fff;--red:#b42318;--shadow:0 8px 24px rgba(18,57,37,.06)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+header{background:radial-gradient(circle at 95% 5%,#178e69 0,transparent 34%),linear-gradient(135deg,#052f25,#0b674b);color:#fff;padding:25px 20px 36px;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff1c;border-radius:50%;right:-72px;bottom:-105px;box-shadow:0 0 0 22px #ffffff08,0 0 0 45px #ffffff06;pointer-events:none}
+header .eyebrow{font-size:10px;letter-spacing:2px;font-weight:850;opacity:.76}
+h1{font-size:26px;line-height:1.12;letter-spacing:-.7px;margin:9px 0 7px;font-weight:850}
+header p{margin:0;color:#d0e7dc;font-size:12px;line-height:1.5}
+main{max-width:760px;margin:auto;padding:0 15px 22px;position:relative}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-19px;position:relative;z-index:1}
+.card{background:var(--white);border:1px solid #e8efe9;border-radius:19px;padding:15px;box-shadow:var(--shadow)}
+.stat .k{font-size:9px;font-weight:850;letter-spacing:.8px;color:var(--muted)}
+.stat .v{font-size:clamp(20px,5.4vw,25px);font-weight:850;letter-spacing:-.7px;color:var(--green2);margin:7px 0 3px;white-space:nowrap}
+.stat .s{font-size:10px;color:var(--muted);line-height:1.4}
+.stat:first-child{grid-column:span 2;background:linear-gradient(125deg,#fff,#f2fbf6)}
+.stat:first-child .v{font-size:31px}
+nav{display:none}
+.panel{display:none;padding-top:20px}.panel.active{display:block}
+h2{font-size:19px;letter-spacing:-.35px;margin:3px 0 14px;font-weight:850}
+.field{margin:12px 0}
+.field label{display:block;font-size:12px;font-weight:750;color:#53675c;margin-bottom:7px}
+input,select,textarea{width:100%;font:inherit;font-size:16px;border:1px solid #dce6df;background:#fbfdfb;border-radius:13px;padding:13px 14px;color:var(--ink);outline:none;min-height:48px;transition:border .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px #0b8f6718;background:#fff}
+.checkrow{display:flex;gap:10px;align-items:center;padding:9px 0;font-size:13px;font-weight:650}
+.checkrow input{width:20px;height:20px;min-height:20px;accent-color:var(--green);padding:0}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button.primary{background:linear-gradient(135deg,var(--green),var(--green2));color:white;border:0;border-radius:14px;padding:15px 17px;font-weight:850;width:100%;font-size:15px;margin-top:10px;box-shadow:0 7px 16px #087f5b25}
+button.primary:active{transform:scale(.99)}
+button.secondary{background:#f2f8f4;color:var(--green2);border:1px solid #dce9e0;border-radius:12px;padding:12px 14px;font-weight:750}
+button.danger{background:#fff7f6;color:var(--red);border:1px solid #f2d7d4;border-radius:10px;padding:8px 12px;font-weight:750}
+.hint{font-size:12px;color:var(--muted);line-height:1.55}
+.record{margin:10px 0;padding:15px}
+.recordtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.record strong{font-size:14px;letter-spacing:-.15px}
+.pill{display:inline-block;font-size:9px;letter-spacing:.4px;font-weight:850;border-radius:999px;padding:5px 8px;background:#e1f4e9;color:#087f5b;white-space:nowrap}
+.meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.75;overflow-wrap:anywhere}
+.record-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.empty{text-align:center;color:var(--muted);padding:30px 12px;line-height:1.7}
+.chartwrap{height:210px;width:100%;margin:12px 0 6px}.chartwrap canvas{width:100%;height:100%}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.toolbar button{flex:1;min-width:130px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:22px 5px 8px}
+.toast{position:fixed;bottom:calc(94px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#142820;color:white;padding:12px 16px;border-radius:13px;box-shadow:0 8px 25px #0002;display:none;max-width:90%;z-index:30;font-size:13px}
+.bottom-nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-top:1px solid #e1eae4;box-shadow:0 -8px 28px #143d2710}
+.bottom-nav button{border:0;background:transparent;color:#7a8981;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:5px 2px 4px;min-height:54px;font-size:10px;font-weight:750}
+.bottom-nav button .nav-icon{height:23px;width:23px;display:grid;place-items:center}
+.bottom-nav button svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.bottom-nav button.active{color:var(--green2);background:#eaf7ef}
+.bottom-nav button.active .nav-icon{transform:translateY(-1px)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.section-head h2{margin:0}
+@media(min-width:600px){header{padding:28px max(22px,calc((100% - 720px)/2)) 40px}main{padding-left:20px;padding-right:20px}.stats{grid-template-columns:repeat(3,1fr)}.stat:first-child{grid-column:auto}.stat:first-child .v{font-size:25px}.bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:min(100%,600px);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0}}
 </style>
 </head>
 <body>
-<header><div class="eyebrow">RIDE SMART · SPEND SMART</div><h1>My Bike Fuel Tracker</h1><p>Fuel log, full-tank mileage and expenses — stored on this device.</p></header>
+<header><div class="eyebrow">RIDE SMART · SPEND SMART</div><h1>My Bike Fuel Tracker</h1><p>Your rides. Your fuel. Your mileage — all in one place.</p></header>
 <main>
 <section class="stats">
  <div class="card stat"><div class="k">LATEST MILEAGE</div><div class="v" id="statMileage">—</div><div class="s">km per litre</div></div>
  <div class="card stat"><div class="k">TOTAL FUEL SPEND</div><div class="v" id="statSpend">₹0</div><div class="s" id="statRecords">0 fuel records</div></div>
  <div class="card stat"><div class="k">DISTANCE SPAN</div><div class="v" id="statDistance">0 km</div><div class="s">First to latest odometer</div></div>
 </section>
-<nav>
- <button class="active" data-tab="add">＋ Add fuel</button><button data-tab="history">History</button><button data-tab="insights">Mileage graph</button><button data-tab="backup">Backup</button>
+<nav class="bottom-nav" aria-label="Main navigation">
+ <button class="active" data-tab="add" aria-label="Add fuel"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16M8 7h5M16 8h2l2 2v6a2 2 0 0 1-4 0v-3"/></svg></span><span>Add fuel</span></button>
+ <button data-tab="history" aria-label="Fuel history"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 10h16M4 15h10M4 20h10"/><circle cx="19" cy="18" r="3"/></svg></span><span>History</span></button>
+ <button data-tab="insights" aria-label="Mileage graph"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m6 15 4-5 4 3 6-8"/></svg></span><span>Mileage</span></button>
+ <button data-tab="backup" aria-label="Backup and settings"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 17v3h14v-3"/></svg></span><span>Backup</span></button>
 </nav>
 <section class="panel active" id="panel-add">
  <div class="card">
