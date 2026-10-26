@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#073b2e">
+<meta name="description" content="Offline motorcycle fuel, mileage and expense tracker.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>My Bike Fuel Tracker</title>
+<style>
+:root{--green:#087f5b;--dark:#073b2e;--ink:#172720;--muted:#6a7b73;--bg:#f3f7f4;--line:#dce7e0;--white:#fff;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,var(--dark),#0a7052);color:white;padding:22px 18px 26px;border-radius:0 0 24px 24px}
+header .eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:800;opacity:.78}h1{font-size:25px;line-height:1.15;margin:8px 0}header p{margin:0;color:#d3e8dc;font-size:13px}
+main{max-width:760px;margin:auto;padding:0 14px 35px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-14px}
+.card{background:white;border:1px solid #e8eee9;border-radius:16px;padding:14px;box-shadow:0 4px 16px #153d2810}
+.stat .k{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--muted)}.stat .v{font-size:23px;font-weight:800;color:var(--green);margin:5px 0}.stat .s{font-size:11px;color:var(--muted)}
+nav{display:flex;gap:8px;overflow:auto;padding:18px 0 12px}nav button{border:1px solid var(--line);background:#fff;color:var(--muted);padding:10px 14px;border-radius:999px;font-weight:700;white-space:nowrap}nav button.active{background:var(--dark);color:white;border-color:var(--dark)}
+h2{font-size:18px;margin:8px 0 12px}.panel{display:none}.panel.active{display:block}.field{margin:10px 0}.field label{display:block;font-size:12px;font-weight:700;color:#52655b;margin-bottom:5px}
+input,select,textarea{width:100%;font:inherit;font-size:15px;border:1px solid #d4e0d8;background:white;border-radius:10px;padding:12px;color:var(--ink);outline-color:var(--green)}
+.checkrow{display:flex;gap:10px;align-items:center;padding:8px 0;font-size:14px}.checkrow input{width:20px;height:20px;accent-color:var(--green)}
+button.primary{background:var(--green);color:white;border:0;border-radius:11px;padding:13px 16px;font-weight:800;width:100%;font-size:15px;margin-top:8px}
+button.secondary{background:white;color:var(--green);border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-weight:750}
+button.danger{background:white;color:var(--red);border:1px solid #f0d0ce;border-radius:9px;padding:7px 10px;font-weight:700}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}.record{margin:10px 0}.recordtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.record strong{font-size:15px}.pill{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;padding:4px 7px;background:#e1f4e9;color:#087f5b}.meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.7}.record-actions{display:flex;justify-content:flex-end;margin-top:8px}.empty{text-align:center;color:var(--muted);padding:24px 8px}.chartwrap{height:210px;width:100%;margin:10px 0}.chartwrap canvas{width:100%;height:100%}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172720;color:white;padding:12px 16px;border-radius:12px;box-shadow:0 6px 20px #0002;display:none;max-width:90%;z-index:10}
+@media(min-width:600px){header{padding-left:max(22px,calc((100% - 720px)/2));padding-right:max(22px,calc((100% - 720px)/2))}.stats{grid-template-columns:repeat(3,1fr)}main{padding-left:20px;padding-right:20px}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">RIDE SMART · SPEND SMART</div><h1>My Bike Fuel Tracker</h1><p>Fuel log, full-tank mileage and expenses — stored on this device.</p></header>
+<main>
+<section class="stats">
+ <div class="card stat"><div class="k">LATEST MILEAGE</div><div class="v" id="statMileage">—</div><div class="s">km per litre</div></div>
+ <div class="card stat"><div class="k">TOTAL FUEL SPEND</div><div class="v" id="statSpend">₹0</div><div class="s" id="statRecords">0 fuel records</div></div>
+ <div class="card stat"><div class="k">DISTANCE SPAN</div><div class="v" id="statDistance">0 km</div><div class="s">First to latest odometer</div></div>
+</section>
+<nav>
+ <button class="active" data-tab="add">＋ Add fuel</button><button data-tab="history">History</button><button data-tab="insights">Mileage graph</button><button data-tab="backup">Backup</button>
+</nav>
+<section class="panel active" id="panel-add">
+ <div class="card">
+  <h2>New fuel record</h2>
+  <form id="fuelForm">
+   <div class="field"><label for="date">Date</label><input id="date" type="date" required></div>
+   <div class="field"><label for="odo">Odometer reading (km)</label><input id="odo" type="number" min="0" step="0.1" placeholder="e.g. 12450" required></div>
+   <div class="twocol">
+    <div class="field"><label for="litres">Fuel added (litres)</label><input id="litres" type="number" min="0.01" step="0.01" placeholder="e.g. 8.5" required></div>
+    <div class="field"><label for="price">Price per litre (₹)</label><input id="price" type="number" min="0.01" step="0.01" placeholder="e.g. 105.50" required></div>
+   </div>
+   <label class="checkrow"><input id="fullTank" type="checkbox" checked><span>This was a full-tank refill</span></label>
+   <div class="field"><label for="note">Note (optional)</label><input id="note" maxlength="160" placeholder="Petrol station, trip, etc."></div>
+   <p class="hint">Mileage is calculated between consecutive full-tank refills. For best accuracy, fill to the same level each time and record any top-ups.</p>
+   <button class="primary" type="submit">Save fuel record</button>
+  </form>
+ </div>
+</section>
+<section class="panel" id="panel-history">
+ <h2>Fuel history</h2><div id="historyList"></div>
+</section>
+<section class="panel" id="panel-insights">
+ <div class="card"><h2>Mileage over time</h2><p class="hint">Each point represents a full-tank interval.</p><div class="chartwrap"><canvas id="chart"></canvas></div><div id="insightSummary" class="hint"></div></div>
+ <div class="card" style="margin-top:12px"><h2>Fuel spending</h2><div id="spendingSummary" class="hint"></div></div>
+</section>
+<section class="panel" id="panel-backup">
+ <div class="card"><h2>Backup & restore</h2><p class="hint">Your records are saved in this browser on this device. Export a backup before clearing browser data or changing phones.</p>
+  <div class="toolbar"><button class="secondary" id="exportCsv">Export CSV</button><button class="secondary" id="exportJson">Backup JSON</button></div>
+  <div class="field"><label for="importFile">Restore from JSON backup</label><input id="importFile" type="file" accept="application/json,.json"></div>
+  <p class="hint">To move records to another phone, export the JSON file and transfer it to the other phone, then restore it here.</p>
+  <button class="danger" id="clearData">Delete all records</button>
+ </div>
+</section>
+<footer>Offline-first · No account · No tracking · My Bike Fuel Tracker</footer>
+</main>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body></html>

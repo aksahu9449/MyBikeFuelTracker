@@ -1,0 +1,19 @@
+{
+  "name": "My Bike Fuel Tracker",
+  "short_name": "Fuel Tracker",
+  "description": "Offline motorcycle fuel, mileage and expense tracker.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f7f4",
+  "theme_color": "#073b2e",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
